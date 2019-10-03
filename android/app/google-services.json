@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "73823830387",
+    "firebase_url": "https://places-app-react-native.firebaseio.com",
+    "project_id": "places-app-react-native",
+    "storage_bucket": "places-app-react-native.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73823830387:android:c4c82efd2e484aed3a4506",
+        "android_client_info": {
+          "package_name": "com.places_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73823830387-o8sn8knmak5douccsnacovgvods61ruj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.places_app",
+            "certificate_hash": "3a9681a5cd88f74ee6749f714508d90d910ccca3"
+          }
+        },
+        {
+          "client_id": "73823830387-t3251acrv77abnn1b1erjlrkmj03o3rr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4xw_GFIQYlysgt_Wljwny2i_QyKvHBDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73823830387-t3251acrv77abnn1b1erjlrkmj03o3rr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
