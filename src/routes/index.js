@@ -1,20 +1,24 @@
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
-import Home from '../pages/Home';
+import Colors from "../constants/Colors";
 
-const AppNavigator = createStackNavigator(
+import Home from "../pages/Home";
+import NewPlace from "../pages/NewPlace";
+
+const MainNavigator = createStackNavigator(
   {
-    Home: {screen: Home},
+    Home: { screen: Home },
+    NewPlace: { screen: NewPlace }
   },
   {
     defaultNavigationOptions: {
-      headerStyle: {backgroundColor: '#0000FF'},
-      headerTintColor: '#FFF',
-    },
-  },
+      headerTintColor: Colors.headerTextColor,
+      headerStyle: { backgroundColor: Colors.primary }
+    }
+  }
 );
 
-const AppContainer = createAppContainer(AppNavigator);
+const AppContainer = createAppContainer(MainNavigator);
 
 export default AppContainer;

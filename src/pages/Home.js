@@ -1,46 +1,60 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
-import {Text, Button, Image} from 'react-native-elements';
-import ImagePicker from 'react-native-image-crop-picker';
-import firebase from 'react-native-firebase';
+import React, { useContext, useEffect } from "react";
+import { View, StyleSheet, FlatList } from "react-native";
+import { Icon, ListItem } from "react-native-elements";
 
-const ref = firebase.firestore().collection('places');
-const storageRef = firebase.storage().ref('/places_images/');
+import { PlacesContext } from "../contexts/PlacesContext";
+import Colors from "../constants/Colors";
 
-const Home = () => {
-  const [image, setImage] = useState(null);
-
-  const getImage = async () => {
-    const result = await ImagePicker.openCamera({
-      cropping: true,
-    });
-    const imageRef = storageRef.child(
-      `${result.creationDate}+${result.filename}.jpg`,
-    );
-    const storageResult = await imageRef.putFile(result.path);
-    setImage({uri: storageResult.downloadURL});
+const Home = ({ navigation }) => {
+  const goToNewPlace = () => {
+    navigation.navigate("NewPlace");
   };
 
-  const saveOnDB = () => {
-    ref.add(image);
-  };
+  const places = useContext(PlacesContext);
 
   return (
-    <View style={{flex: 1}}>
-      <Text h1>Hello...!</Text>
-      <Button
-        icon={{name: 'camera', type: 'material', size: 18, color: '#fff'}}
-        title="Get Image"
-        onPress={getImage}
+    <View style={styles.root}>
+      <FlatList
+        data={places}
+        renderItem={({ item }) => (
+          <ListItem
+            title={item.title}
+            subtitle={`${item.description} - $${item.price} - $${item.id}`}
+            bottomDivider
+            chevron
+          />
+        )}
+        keyExtractor={item => item.id}
       />
-      {image && <Image style={{height: 400}} source={image} />}
-      <Button title="Save on Database" onPress={saveOnDB} disabled={!image} />
+      <Icon
+        containerStyle={styles.newPlaceButton}
+        reverse
+        raised
+        name="add"
+        type="material"
+        color={Colors.accent}
+        onPress={goToNewPlace}
+      />
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  root: {
+    flex: 1
+  },
+  newPlaceButton: {
+    position: "absolute",
+    zIndex: 1,
+    bottom: 0,
+    right: 0,
+    marginBottom: 16,
+    marginRight: 16
+  }
+});
+
 Home.navigationOptions = {
-  title: 'Main Page',
+  title: "Places List"
 };
 
 export default Home;
