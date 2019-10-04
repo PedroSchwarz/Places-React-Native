@@ -1,6 +1,6 @@
-import React, { createContext, useReducer } from "react";
+import React, {createContext, useReducer} from 'react';
 
-import PlacesReducer from "../reducers/PlacesReducer";
+import PlacesReducer from '../reducers/PlacesReducer';
 
 export const PlacesContext = createContext();
 export const PlacesDispatchContext = createContext();

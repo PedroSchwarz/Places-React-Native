@@ -1,12 +1,15 @@
 import React, {useState, useContext} from 'react';
 import {View, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import {Input, Image, Button} from 'react-native-elements';
-import uuid from 'uuid/v4';
 
 import {openLibrary, openCamera} from '../helpers/imagePicker';
-import {PlacesDispatchContext} from '../contexts/PlacesContext';
+// import {PlacesDispatchContext} from '../contexts/PlacesContext';
 import useInputState from '../hooks/useInputState';
+import useToggleState from '../hooks/useToggleState';
 import Colors from '../constants/Colors';
+
+import {setPlace} from '../helpers/firebase/firestore';
+import {storeFile} from '../helpers/firebase/storage';
 
 const NewPlace = props => {
   const [image, setImage] = useState(null);
@@ -14,7 +17,9 @@ const NewPlace = props => {
   const [description, changeDescription, resetDescription] = useInputState('');
   const [price, changePrice, resetPrice] = useInputState('');
 
-  const dispatch = useContext(PlacesDispatchContext);
+  const [isLoading, toggleIsLoading] = useToggleState(false);
+
+  // const dispatch = useContext(PlacesDispatchContext);
 
   const getFromLibrary = async () => {
     const {path} = await openLibrary();
@@ -28,9 +33,13 @@ const NewPlace = props => {
     setImage(source);
   };
 
-  const handleAddPlace = () => {
-    const newPlace = {id: uuid(), title, description, price, imageUrl: image};
-    dispatch({type: 'ADD', newPlace});
+  const handleAddPlace = async () => {
+    toggleIsLoading();
+    const imageUrl = await storeFile(image.uri);
+    // const newPlace =
+    await setPlace(title, description, price, imageUrl);
+    toggleIsLoading();
+    // dispatch({type: 'ADD', newPlace});
     props.navigation.pop();
   };
 
@@ -105,9 +114,11 @@ const NewPlace = props => {
           containerStyle={styles.postButtonContainer}
           iconContainerStyle={styles.postButtonIcon}
           icon={{name: 'check', type: 'material', size: 15, color: '#fff'}}
-          disabled={!title || !description || !price || !image}
           title="Post Place"
+          disabled={!title || !description || !price || !image}
+          disabledTitleStyle={{color: '#FFF'}}
           onPress={handleAddPlace}
+          loading={isLoading}
         />
       </ScrollView>
     </View>

@@ -1,38 +1,54 @@
-import React, { useContext, useEffect } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
-import { Icon, ListItem } from "react-native-elements";
+import React, {useContext, useEffect} from 'react';
+import {View, StyleSheet, FlatList} from 'react-native';
 
-import { PlacesContext } from "../contexts/PlacesContext";
-import Colors from "../constants/Colors";
+import PlaceListItem from '../components/PlaceListItem';
+import EmptyListContent from '../components/EmptyListContent';
+import FloatingActionButton from '../components/FloatingActionButton';
 
-const Home = ({ navigation }) => {
+import {PlacesContext} from '../contexts/PlacesContext';
+import {PlacesDispatchContext} from '../contexts/PlacesContext';
+import {getPlaces, getRootRef} from '../helpers/firebase/firestore';
+
+const Home = ({navigation}) => {
+  const places = useContext(PlacesContext);
+  const dispatch = useContext(PlacesDispatchContext);
+
+  useEffect(() => {
+    // getPlaces().then(initialPlaces => {
+    //   dispatch({type: 'INIT', initialPlaces});
+    // });
+    return getRootRef().onSnapshot(result => {
+      const initialPlaces = [];
+      result.forEach(doc => {
+        initialPlaces.push({...doc.data()});
+      });
+      dispatch({type: 'INIT', initialPlaces});
+    });
+  }, []);
+
   const goToNewPlace = () => {
-    navigation.navigate("NewPlace");
+    navigation.navigate('NewPlace');
   };
 
-  const places = useContext(PlacesContext);
+  const goToPlaceDetail = item => {
+    navigation.navigate('PlaceDetail', {place: item});
+  };
+
+  const buildItems = ({item}) => (
+    <PlaceListItem {...item} goToPlaceDetail={goToPlaceDetail} />
+  );
 
   return (
     <View style={styles.root}>
       <FlatList
         data={places}
-        renderItem={({ item }) => (
-          <ListItem
-            title={item.title}
-            subtitle={`${item.description} - $${item.price} - $${item.id}`}
-            bottomDivider
-            chevron
-          />
-        )}
         keyExtractor={item => item.id}
+        ListEmptyComponent={<EmptyListContent />}
+        renderItem={buildItems}
       />
-      <Icon
-        containerStyle={styles.newPlaceButton}
-        reverse
-        raised
-        name="add"
-        type="material"
-        color={Colors.accent}
+      <FloatingActionButton
+        iconName="add"
+        iconType="material"
         onPress={goToNewPlace}
       />
     </View>
@@ -41,20 +57,12 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1
+    flex: 1,
   },
-  newPlaceButton: {
-    position: "absolute",
-    zIndex: 1,
-    bottom: 0,
-    right: 0,
-    marginBottom: 16,
-    marginRight: 16
-  }
 });
 
 Home.navigationOptions = {
-  title: "Places List"
+  title: 'Places List',
 };
 
 export default Home;
