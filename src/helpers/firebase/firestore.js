@@ -13,9 +13,9 @@ export const getPlaces = async () => {
   return places;
 };
 
-export const setPlace = async (title, description, price, imageUrl) => {
+export const setPlace = async place => {
   const placeRef = rootRef.doc();
-  const newPlace = {id: placeRef.id, title, description, price, imageUrl};
+  const newPlace = {...place, id: placeRef.id};
   await placeRef.set(newPlace);
   return newPlace;
 };

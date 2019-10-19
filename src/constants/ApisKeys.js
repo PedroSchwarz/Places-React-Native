@@ -1,0 +1,1 @@
+export default {GOOGLE_MAPS_API_KEY: 'AIzaSyAk9HOjt3HzM6qhakp1RHDhSR3GpVY74PM'};

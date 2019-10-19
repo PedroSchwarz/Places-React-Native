@@ -2,8 +2,12 @@ import React, {useState, useContext} from 'react';
 import {View, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import {Input, Image, Button} from 'react-native-elements';
 
+import MapDetails from '../components/MapDetails';
+
 import {openLibrary, openCamera} from '../helpers/imagePicker';
+import {getLocation} from '../helpers/location';
 // import {PlacesDispatchContext} from '../contexts/PlacesContext';
+import {UserContext} from '../contexts/UserContext';
 import useInputState from '../hooks/useInputState';
 import useToggleState from '../hooks/useToggleState';
 import Colors from '../constants/Colors';
@@ -11,8 +15,11 @@ import Colors from '../constants/Colors';
 import {setPlace} from '../helpers/firebase/firestore';
 import {storeFile} from '../helpers/firebase/storage';
 
-const NewPlace = props => {
+const NewPlace = ({navigation}) => {
   const [image, setImage] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [address, setAddress] = useState('');
+
   const [title, changeTitle, resetTitle] = useInputState('');
   const [description, changeDescription, resetDescription] = useInputState('');
   const [price, changePrice, resetPrice] = useInputState('');
@@ -20,6 +27,7 @@ const NewPlace = props => {
   const [isLoading, toggleIsLoading] = useToggleState(false);
 
   // const dispatch = useContext(PlacesDispatchContext);
+  const {user} = useContext(UserContext);
 
   const getFromLibrary = async () => {
     const {path} = await openLibrary();
@@ -33,19 +41,31 @@ const NewPlace = props => {
     setImage(source);
   };
 
+  const getCurrentLocation = async () => {
+    await getLocation(setRegion, setAddress);
+  };
+
   const handleAddPlace = async () => {
     toggleIsLoading();
     const imageUrl = await storeFile(image.uri);
     // const newPlace =
-    await setPlace(title, description, price, imageUrl);
+    await setPlace({
+      title,
+      description,
+      price,
+      imageUrl,
+      region,
+      address,
+      user,
+    });
     toggleIsLoading();
     // dispatch({type: 'ADD', newPlace});
-    props.navigation.pop();
+    navigation.pop();
   };
 
   return (
-    <View style={styles.root}>
-      <ScrollView>
+    <ScrollView>
+      <View style={styles.root}>
         <View style={styles.inputContainer}>
           <Input
             label="Title"
@@ -77,51 +97,81 @@ const NewPlace = props => {
         </View>
         <View style={styles.buttonsContainer}>
           <Button
+            buttonStyle={styles.libraryButton}
             containerStyle={styles.imageButtonsContainer}
             icon={{
               name: 'photo-library',
               type: 'material',
-              size: 15,
-              color: '#fff',
+              size: 18,
+              color: Colors.light,
             }}
             title="Open Library"
             onPress={getFromLibrary}
           />
           <Button
+            buttonStyle={styles.cameraButton}
             containerStyle={styles.imageButtonsContainer}
             icon={{
               name: 'camera',
               type: 'material',
-              size: 15,
-              color: '#fff',
+              size: 18,
+              color: Colors.light,
             }}
             title="Open Camera"
             onPress={getFromCamera}
           />
         </View>
         {image && (
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.image}
-              source={image}
-              PlaceholderContent={<ActivityIndicator />}
-              resizeMode="cover"
-            />
-          </View>
+          <Image
+            style={styles.image}
+            source={image}
+            PlaceholderContent={<ActivityIndicator />}
+            placeholderStyle={styles.imagePlaceholder}
+            resizeMode="cover"
+          />
+        )}
+        <Button
+          buttonStyle={styles.locationButton}
+          containerStyle={styles.buttonContainer}
+          iconContainerStyle={styles.buttonIcon}
+          icon={{
+            name: 'location-on',
+            type: 'material',
+            size: 18,
+            color: Colors.light,
+          }}
+          title="Get Current Location"
+          onPress={getCurrentLocation}
+        />
+        {region && (
+          <MapDetails
+            region={region}
+            address={address}
+            showsUserLocation={true}
+            scrollEnabled={false}
+            showMarker={false}
+          />
         )}
         <Button
           buttonStyle={styles.postButton}
-          containerStyle={styles.postButtonContainer}
-          iconContainerStyle={styles.postButtonIcon}
-          icon={{name: 'check', type: 'material', size: 15, color: '#fff'}}
+          containerStyle={styles.buttonContainer}
+          iconContainerStyle={styles.buttonIcon}
+          icon={{
+            name: 'check',
+            type: 'material',
+            size: 18,
+            color: Colors.light,
+          }}
           title="Post Place"
-          disabled={!title || !description || !price || !image}
-          disabledTitleStyle={{color: '#FFF'}}
+          disabled={
+            !title || !description || !price || !image || !region || isLoading
+          }
+          disabledTitleStyle={{color: Colors.light}}
           onPress={handleAddPlace}
           loading={isLoading}
         />
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -141,15 +191,22 @@ const styles = StyleSheet.create({
   image: {
     height: 400,
   },
+  imagePlaceholder: {
+    backgroundColor: '#d4d4d4',
+  },
+  libraryButton: {backgroundColor: Colors.info},
+  cameraButton: {backgroundColor: Colors.info},
   imageButtonsContainer: {
     flex: 1,
-    marginHorizontal: 8,
+    marginHorizontal: 16,
   },
-  postButtonContainer: {
-    marginVertical: 16,
-    marginHorizontal: 8,
+  locationButton: {
+    backgroundColor: Colors.accent,
   },
-  postButtonIcon: {
+  buttonContainer: {
+    margin: 16,
+  },
+  buttonIcon: {
     marginRight: 16,
   },
   postButton: {

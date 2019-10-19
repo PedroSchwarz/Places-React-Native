@@ -1,22 +1,70 @@
+import React from 'react';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from '../constants/Colors';
 
-import Home from '../pages/Home';
+import Places from '../pages/Places';
 import NewPlace from '../pages/NewPlace';
-import PlaceDetail from '../pages/PlaceDetail';
+import PlaceDetails from '../pages/PlaceDetails';
+import SignIn from '../pages/SignIn';
+import Register from '../pages/Register';
+
+const AuthTabNavigator = createMaterialBottomTabNavigator(
+  {
+    SignIn: {
+      screen: SignIn,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => (
+          <MaterialIcons name="person" size={22} color={tintColor} />
+        ),
+        tabBarColor: Colors.accent,
+        title: 'Access Your Account',
+      },
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => (
+          <MaterialIcons name="person-add" size={22} color={tintColor} />
+        ),
+        tabBarColor: Colors.primary,
+        title: 'Create a New Account',
+      },
+    },
+  },
+  {
+    shifting: true,
+    activeColor: '#FFF',
+  },
+);
 
 const MainNavigator = createStackNavigator(
   {
-    Home: {screen: Home},
-    NewPlace: {screen: NewPlace},
-    PlaceDetail: {screen: PlaceDetail},
+    Auth: {
+      screen: AuthTabNavigator,
+      navigationOptions: {
+        title: 'Authentication',
+      },
+    },
+    Places: {
+      screen: Places,
+    },
+    NewPlace: {
+      screen: NewPlace,
+    },
+    PlaceDetails: {
+      screen: PlaceDetails,
+    },
   },
   {
     defaultNavigationOptions: {
-      headerTintColor: Colors.headerTextColor,
-      headerStyle: {backgroundColor: Colors.primary},
+      headerTintColor: Colors.light,
+      headerStyle: {
+        backgroundColor: Colors.primary,
+      },
     },
   },
 );

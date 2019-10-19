@@ -7,9 +7,19 @@ import {
   ScrollView,
 } from 'react-native';
 import {Divider, Image, Badge} from 'react-native-elements';
+import UserDetails from '../components/UserDetails';
+import MapDetails from '../components/MapDetails';
 
-const PlaceDetail = ({navigation}) => {
-  const {title, description, price, imageUrl} = navigation.getParam('place');
+const PlaceDetails = ({navigation}) => {
+  const {
+    title,
+    description,
+    price,
+    imageUrl,
+    region,
+    address,
+    user,
+  } = navigation.getParam('place');
   return (
     <ScrollView>
       <View style={styles.root}>
@@ -17,8 +27,10 @@ const PlaceDetail = ({navigation}) => {
           style={styles.image}
           source={{uri: imageUrl}}
           PlaceholderContent={<ActivityIndicator />}
+          placeholderStyle={styles.imagePlaceholder}
         />
         <View style={styles.contentContainer}>
+          <UserDetails userEmail={user.userEmail} />
           <View style={styles.headerContent}>
             <Text style={styles.title}>{title}</Text>
             <Badge
@@ -28,8 +40,17 @@ const PlaceDetail = ({navigation}) => {
               textStyle={styles.priceText}
             />
           </View>
-          <Divider style={styles.headerContentDivider} />
+          <Divider />
           <Text style={styles.description}>{description}</Text>
+        </View>
+        <View style={styles.mapContainer}>
+          <MapDetails
+            region={region}
+            address={address}
+            showsUserLocation={false}
+            scrollEnabled={true}
+            showMarker={true}
+          />
         </View>
       </View>
     </ScrollView>
@@ -43,17 +64,22 @@ const styles = StyleSheet.create({
   image: {
     height: 400,
   },
+  imagePlaceholder: {
+    backgroundColor: '#d4d4d4',
+  },
   contentContainer: {
-    marginHorizontal: 16,
+    padding: 16,
+    paddingBottom: 0,
   },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 16,
+    marginVertical: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
+    fontWeight: 'bold',
   },
   priceContainer: {
     paddingVertical: 16,
@@ -63,18 +89,20 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 14,
   },
-  headerContentDivider: {
-    marginVertical: 8,
-  },
   description: {
+    marginVertical: 16,
     fontSize: 20,
+    textAlign: 'center',
+  },
+  mapContainer: {
+    marginBottom: 16,
   },
 });
 
-PlaceDetail.navigationOptions = ({navigation}) => {
+PlaceDetails.navigationOptions = ({navigation}) => {
   return {
     title: `${navigation.getParam('place').title}`,
   };
 };
 
-export default PlaceDetail;
+export default PlaceDetails;

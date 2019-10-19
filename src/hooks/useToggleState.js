@@ -4,7 +4,7 @@ export default initialValue => {
   const [value, setValue] = useState(initialValue);
 
   const toggleValue = () => {
-    setValue(!value);
+    setValue(state => !state);
   };
 
   return [value, toggleValue];

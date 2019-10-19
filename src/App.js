@@ -3,6 +3,7 @@ import {ThemeProvider} from 'react-native-elements';
 import {useScreens} from 'react-native-screens';
 
 import AppContainer from './routes';
+import {UserProvider} from './contexts/UserContext';
 import {PlacesProvider} from './contexts/PlacesContext';
 import Colors from './constants/Colors';
 
@@ -18,9 +19,11 @@ export default App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <PlacesProvider>
-        <AppContainer />
-      </PlacesProvider>
+      <UserProvider>
+        <PlacesProvider>
+          <AppContainer />
+        </PlacesProvider>
+      </UserProvider>
     </ThemeProvider>
   );
 };

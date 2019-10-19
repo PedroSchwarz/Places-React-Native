@@ -1,15 +1,18 @@
 import React, {useContext, useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 
 import PlaceListItem from '../components/PlaceListItem';
 import EmptyListContent from '../components/EmptyListContent';
 import FloatingActionButton from '../components/FloatingActionButton';
+import CustomHeaderButton from '../components/CustomHeaderButton';
 
 import {PlacesContext} from '../contexts/PlacesContext';
 import {PlacesDispatchContext} from '../contexts/PlacesContext';
 import {getPlaces, getRootRef} from '../helpers/firebase/firestore';
+import {getCurrentUser, signOutUser} from '../helpers/firebase/auth';
 
-const Home = ({navigation}) => {
+const Places = ({navigation}) => {
   const places = useContext(PlacesContext);
   const dispatch = useContext(PlacesDispatchContext);
 
@@ -17,6 +20,7 @@ const Home = ({navigation}) => {
     // getPlaces().then(initialPlaces => {
     //   dispatch({type: 'INIT', initialPlaces});
     // });
+    goToAuth();
     return getRootRef().onSnapshot(result => {
       const initialPlaces = [];
       result.forEach(doc => {
@@ -26,16 +30,17 @@ const Home = ({navigation}) => {
     });
   }, []);
 
+  const goToAuth = async () => {
+    if (!getCurrentUser()) navigation.replace('Auth');
+    else return;
+  };
+
   const goToNewPlace = () => {
     navigation.navigate('NewPlace');
   };
 
-  const goToPlaceDetail = item => {
-    navigation.navigate('PlaceDetail', {place: item});
-  };
-
   const buildItems = ({item}) => (
-    <PlaceListItem {...item} goToPlaceDetail={goToPlaceDetail} />
+    <PlaceListItem place={item} navigation={navigation} />
   );
 
   return (
@@ -61,8 +66,20 @@ const styles = StyleSheet.create({
   },
 });
 
-Home.navigationOptions = {
-  title: 'Places List',
+Places.navigationOptions = ({navigation}) => {
+  const signOut = async () => {
+    await signOutUser();
+    navigation.replace('Auth');
+  };
+
+  return {
+    title: 'Places App',
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item title="Sign Out" iconName="exit-to-app" onPress={signOut} />
+      </HeaderButtons>
+    ),
+  };
 };
 
-export default Home;
+export default Places;
