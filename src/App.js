@@ -1,4 +1,5 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {ThemeProvider} from 'react-native-elements';
 import {useScreens} from 'react-native-screens';
 
@@ -21,6 +22,10 @@ export default App = () => {
     <ThemeProvider theme={theme}>
       <UserProvider>
         <PlacesProvider>
+          <StatusBar
+            backgroundColor={Colors.darkPrimary}
+            barStyle="light-content"
+          />
           <AppContainer />
         </PlacesProvider>
       </UserProvider>

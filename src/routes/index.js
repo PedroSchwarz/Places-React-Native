@@ -9,6 +9,7 @@ import Colors from '../constants/Colors';
 import Places from '../pages/Places';
 import NewPlace from '../pages/NewPlace';
 import PlaceDetails from '../pages/PlaceDetails';
+import EditPlace from '../pages/EditPlace';
 import SignIn from '../pages/SignIn';
 import Register from '../pages/Register';
 
@@ -57,6 +58,9 @@ const MainNavigator = createStackNavigator(
     },
     PlaceDetails: {
       screen: PlaceDetails,
+    },
+    EditPlace: {
+      screen: EditPlace,
     },
   },
   {

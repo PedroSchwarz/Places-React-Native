@@ -5,10 +5,17 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {Divider, Image, Badge} from 'react-native-elements';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+
 import UserDetails from '../components/UserDetails';
 import MapDetails from '../components/MapDetails';
+import CustomHeaderButton from '../components/CustomHeaderButton';
+
+import {deletePlace} from '../helpers/firebase/firestore';
+import {getCurrentUser} from '../helpers/firebase/auth';
 
 const PlaceDetails = ({navigation}) => {
   const {
@@ -20,6 +27,7 @@ const PlaceDetails = ({navigation}) => {
     address,
     user,
   } = navigation.getParam('place');
+
   return (
     <ScrollView>
       <View style={styles.root}>
@@ -79,7 +87,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
   },
   priceContainer: {
     paddingVertical: 16,
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   priceText: {
-    fontSize: 14,
+    fontSize: 16,
   },
   description: {
     marginVertical: 16,
@@ -100,8 +107,34 @@ const styles = StyleSheet.create({
 });
 
 PlaceDetails.navigationOptions = ({navigation}) => {
+  const placeInfo = navigation.getParam('place');
+  const currentUser = getCurrentUser();
+  const isOwner = placeInfo.user.userId === currentUser.uid;
+
+  const goToEdit = () => {
+    navigation.navigate('EditPlace', {place: placeInfo});
+  };
+
+  const handleDeletePlace = async () => {
+    await deletePlace(placeInfo.id);
+    navigation.popToTop();
+  };
+
+  const showAlert = () => {
+    Alert.alert('Are You Sure?', 'This post will be delete forever!', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Yes', onPress: handleDeletePlace, style: 'destructive'},
+    ]);
+  };
+
   return {
-    title: `${navigation.getParam('place').title}`,
+    title: placeInfo.title,
+    headerRight: isOwner ? (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item title="Edit" iconName="create" onPress={goToEdit} />
+        <Item title="Delete" iconName="delete" onPress={showAlert} />
+      </HeaderButtons>
+    ) : null,
   };
 };
 

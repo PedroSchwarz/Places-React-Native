@@ -1,21 +1,44 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Avatar, Divider} from 'react-native-elements';
+import {Avatar, Divider, Icon} from 'react-native-elements';
+import email from 'react-native-email';
 
 import Colors from '../constants/Colors';
 
 const UserDetails = ({userEmail}) => {
+  const handleEmail = () => {
+    const to = userEmail;
+    email(to, {subject: 'Contact from Places App', body: ''});
+  };
+
   return (
     <View>
       <View style={styles.userDetailContainer}>
-        <Avatar
-          rounded
-          size="large"
-          overlayContainerStyle={styles.avatar}
-          title={userEmail[0].toUpperCase()}
+        <View>
+          <Avatar
+            size="large"
+            title={userEmail[0].toUpperCase()}
+            overlayContainerStyle={styles.avatar}
+          />
+        </View>
+        <Icon
+          name="comment"
+          type="material"
+          size={25}
+          reverse
+          color={Colors.success}
+          onPress={handleEmail}
         />
-        <Text style={styles.emailText}>{`By: ${userEmail}`}</Text>
+        <Icon
+          name="email"
+          type="material"
+          size={25}
+          reverse
+          color={Colors.info}
+          onPress={handleEmail}
+        />
       </View>
+      <Text style={styles.emailText}>{`By: ${userEmail}`}</Text>
       <Divider />
     </View>
   );
@@ -24,15 +47,17 @@ const UserDetails = ({userEmail}) => {
 const styles = StyleSheet.create({
   userDetailContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 16,
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   avatar: {
     backgroundColor: Colors.accent,
+    borderRadius: 50,
   },
   emailText: {
-    marginLeft: 16,
-    fontSize: 14,
+    marginVertical: 16,
+    marginLeft: 8,
+    fontSize: 16,
   },
 });
 

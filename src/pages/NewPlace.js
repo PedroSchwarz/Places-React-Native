@@ -20,9 +20,9 @@ const NewPlace = ({navigation}) => {
   const [region, setRegion] = useState(null);
   const [address, setAddress] = useState('');
 
-  const [title, changeTitle, resetTitle] = useInputState('');
-  const [description, changeDescription, resetDescription] = useInputState('');
-  const [price, changePrice, resetPrice] = useInputState('');
+  const [title, changeTitle] = useInputState('');
+  const [description, changeDescription] = useInputState('');
+  const [price, changePrice] = useInputState('');
 
   const [isLoading, toggleIsLoading] = useToggleState(false);
 

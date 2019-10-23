@@ -17,5 +17,15 @@ export const setPlace = async place => {
   const placeRef = rootRef.doc();
   const newPlace = {...place, id: placeRef.id};
   await placeRef.set(newPlace);
-  return newPlace;
+};
+
+export const updatePlace = async place => {
+  const {id, title, description, price} = place;
+  const placeRef = getRootRef().doc(id);
+  await placeRef.update({title, description, price});
+};
+
+export const deletePlace = async placeId => {
+  const placeRef = getRootRef().doc(placeId);
+  await placeRef.delete();
 };
