@@ -4,7 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 const EmptyListContent = () => {
   return (
     <View style={styles.emptyListContent}>
-      <Text style={styles.emptyListWarning}>No Places Added Yet!</Text>
+      <Text style={styles.emptyListWarning}>No Content Added Yet!</Text>
     </View>
   );
 };

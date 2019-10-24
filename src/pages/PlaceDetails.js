@@ -19,6 +19,7 @@ import {getCurrentUser} from '../helpers/firebase/auth';
 
 const PlaceDetails = ({navigation}) => {
   const {
+    id,
     title,
     description,
     price,
@@ -38,7 +39,7 @@ const PlaceDetails = ({navigation}) => {
           placeholderStyle={styles.imagePlaceholder}
         />
         <View style={styles.contentContainer}>
-          <UserDetails userEmail={user.userEmail} />
+          <UserDetails userEmail={user.userEmail} placeId={id} />
           <View style={styles.headerContent}>
             <Text style={styles.title}>{title}</Text>
             <Badge

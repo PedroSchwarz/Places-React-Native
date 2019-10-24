@@ -9,7 +9,7 @@ import CustomHeaderButton from '../components/CustomHeaderButton';
 
 import {PlacesContext} from '../contexts/PlacesContext';
 import {PlacesDispatchContext} from '../contexts/PlacesContext';
-import {getPlaces, getRootRef} from '../helpers/firebase/firestore';
+import {getPlacesRef} from '../helpers/firebase/firestore';
 import {getCurrentUser, signOutUser} from '../helpers/firebase/auth';
 
 const Places = ({navigation}) => {
@@ -17,11 +17,8 @@ const Places = ({navigation}) => {
   const dispatch = useContext(PlacesDispatchContext);
 
   useEffect(() => {
-    // getPlaces().then(initialPlaces => {
-    //   dispatch({type: 'INIT', initialPlaces});
-    // });
     goToAuth();
-    return getRootRef().onSnapshot(result => {
+    return getPlacesRef().onSnapshot(result => {
       const initialPlaces = [];
       result.forEach(doc => {
         initialPlaces.push({...doc.data()});

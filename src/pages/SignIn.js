@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Alert, ScrollView, StyleSheet} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import {UserContext} from '../contexts/UserContext';
@@ -15,6 +15,10 @@ const SignIn = ({navigation}) => {
   const [isLoading, toggleIsLoading] = useToggleState(false);
 
   const {setUser} = useContext(UserContext);
+
+  useEffect(() => {
+    goToPlaces();
+  }, []);
 
   const handleSignIn = async () => {
     toggleIsLoading();

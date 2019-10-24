@@ -31,7 +31,7 @@ const AuthTabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: ({tintColor}) => (
           <MaterialIcons name="person-add" size={22} color={tintColor} />
         ),
-        tabBarColor: Colors.primary,
+        tabBarColor: Colors.success,
         title: 'Create a New Account',
       },
     },

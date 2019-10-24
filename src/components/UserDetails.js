@@ -1,19 +1,32 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Modal, StyleSheet} from 'react-native';
 import {Avatar, Divider, Icon} from 'react-native-elements';
 import email from 'react-native-email';
 
+import Comments from '../components/Comments';
+
+import useToggleState from '../hooks/useToggleState';
+
 import Colors from '../constants/Colors';
 
-const UserDetails = ({userEmail}) => {
+const UserDetails = ({userEmail, placeId}) => {
+  const [show, toggleShow] = useToggleState(false);
+
   const handleEmail = () => {
     const to = userEmail;
     email(to, {subject: 'Contact from Places App', body: ''});
   };
 
+  const showComments = () => {
+    toggleShow();
+  };
+
   return (
     <View>
       <View style={styles.userDetailContainer}>
+        <Modal animationType="slide" transparent={false} visible={show}>
+          <Comments placeId={placeId} hideModal={showComments} />
+        </Modal>
         <View>
           <Avatar
             size="large"
@@ -27,7 +40,7 @@ const UserDetails = ({userEmail}) => {
           size={25}
           reverse
           color={Colors.success}
-          onPress={handleEmail}
+          onPress={showComments}
         />
         <Icon
           name="email"
