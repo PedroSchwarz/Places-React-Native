@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 18,
+    width: '95%',
   },
   secondaryContent: {
     flexWrap: 'wrap',

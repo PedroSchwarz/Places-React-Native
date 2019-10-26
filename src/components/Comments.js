@@ -47,7 +47,7 @@ const Comments = ({placeId, hideModal}) => {
         <Input
           containerStyle={styles.inputContainer}
           label="Comment"
-          placeholder="Commnet here..."
+          placeholder="Comment here..."
           autoCapitalize="sentences"
           value={comment}
           onChangeText={changeComment}
