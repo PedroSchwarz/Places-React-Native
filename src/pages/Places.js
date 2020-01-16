@@ -70,7 +70,7 @@ Places.navigationOptions = ({navigation}) => {
   };
 
   return {
-    title: 'Places App',
+    title: 'Places AppCenter version',
     headerRight: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item title="Sign Out" iconName="exit-to-app" onPress={signOut} />
